@@ -1,2 +1,2 @@
-#Cursostec
+# Cursostec
 run on eclipse ide
