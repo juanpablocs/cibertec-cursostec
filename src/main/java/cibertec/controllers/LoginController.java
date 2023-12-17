@@ -3,6 +3,8 @@ package cibertec.controllers;
 import java.io.IOException;
 
 import cibertec.dao.UsuarioDao;
+import cibertec.dao.UsuarioDaoImpl;
+import cibertec.models.Usuario;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,7 +19,7 @@ public class LoginController extends HttpServlet {
 	private UsuarioDao usuarioDao;
 
     public void init() {
-        usuarioDao = new UsuarioDao();
+        usuarioDao = new UsuarioDaoImpl();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -27,12 +29,17 @@ public class LoginController extends HttpServlet {
     }
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = request.getParameter("username");
+        String email = request.getParameter("username");
         String password = request.getParameter("password");
 
-        if (usuarioDao.validarUsuario(username, password)) {
+        Usuario usuario = usuarioDao.validarUsuario(email, password);
+
+        if (usuario != null) {
             // Login exitoso
-            request.getSession().setAttribute("user", username);
+            request.getSession().setAttribute("email", usuario.getEmail());
+            request.getSession().setAttribute("id", usuario.getId());
+            request.getSession().setAttribute("nombre", usuario.getNombre());
+            request.getSession().setAttribute("rol", usuario.getRol().getNombre());
             response.sendRedirect(request.getContextPath()+"/"); // Redireccionar a la página de inicio
         } else {
             // Login fallido

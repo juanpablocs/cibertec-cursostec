@@ -15,7 +15,7 @@ public class CuentaController extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    	String user = (String) request.getSession().getAttribute("user");
+    	String user = (String) request.getSession().getAttribute("email");
     	System.out.println(user);
     	if(user == null) {
     		response.sendRedirect(request.getContextPath()+"/");

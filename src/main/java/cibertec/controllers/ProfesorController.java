@@ -1,35 +1,33 @@
 package cibertec.controllers;
 
-import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import cibertec.dao.CursoDao;
-import cibertec.dao.CursoDaoImpl;
-import cibertec.dao.ProfesorDaoImpl;
-import cibertec.dto.CursoDto;
-import cibertec.models.Curso;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebServlet("/cursos")
-public class CursoController extends HttpServlet {
+import cibertec.dao.ProfesorDaoImpl;
+import cibertec.dto.ProfesorDto;
+import cibertec.models.Profesor;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/profesores")
+public class ProfesorController extends HttpServlet {
     private static final long serialVersionUID = 1L;
-	private CursoDao cursoDao;
 	private ObjectMapper objectMapper;
 	private ProfesorDaoImpl profeDao;
 
     public void init() {
-        cursoDao = new CursoDaoImpl();
         profeDao = new ProfesorDaoImpl();
         objectMapper = new ObjectMapper(); 
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("cursos", cursoDao.obtenerCursos());
         request.setAttribute("profesores", profeDao.getProfesores());
         String user = (String) request.getSession().getAttribute("email");
     	System.out.println(user);
@@ -37,7 +35,7 @@ public class CursoController extends HttpServlet {
     		response.sendRedirect(request.getContextPath()+"/");
     		return;
     	}
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/cursos.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/profesores.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -45,38 +43,32 @@ public class CursoController extends HttpServlet {
     	// TODO: fix session
     	//    	String userId = (String) request.getSession().getAttribute("id");
     	String userId = "1";
-        CursoDto cursoDto = objectMapper.readValue(request.getInputStream(), CursoDto.class);
+        ProfesorDto profeDto = objectMapper.readValue(request.getInputStream(), ProfesorDto.class);
         Map<String, Object> respuesta = new HashMap<>();
         
         boolean executed = false;
-        Curso data = new Curso();
+        Profesor data = new Profesor();
 
-        switch(cursoDto.getAction()) {
+        switch(profeDto.getAction()) {
         case "delete":
-        	executed = cursoDao.eliminarCurso(cursoDto.getCurso().getId(), userId);
+        	executed = profeDao.eliminar(profeDto.getItem().getId(), userId);
         	break;
         case "edit":
-        	Curso updCurso = new Curso();
-        	Curso curso = cursoDto.getCurso();
+        	Profesor updCurso = new Profesor();
+        	Profesor curso = profeDto.getItem();
         	updCurso.setId(curso.getId());
         	updCurso.setNombre(curso.getNombre());
-        	updCurso.setDescripcion(curso.getDescripcion());
-        	updCurso.setImage(curso.getImage());
-        	updCurso.setProfesorId(curso.getProfesor().getId());
-        	updCurso.setUsuarioId(1);
-        	executed = cursoDao.actualizarCurso(updCurso, userId);
+        	updCurso.setEspecialidad(curso.getEspecialidad());
+        	executed = profeDao.actualizar(updCurso, userId);
             data.setId(updCurso.getId());
         	break;
         case "add":
-        	Curso newCurso = new Curso();
-        	Curso curso1 = cursoDto.getCurso();
+        	Profesor newCurso = new Profesor();
+        	Profesor curso1 = profeDto.getItem();
         	newCurso.setNombre(curso1.getNombre());
-        	newCurso.setDescripcion(curso1.getDescripcion());
-        	newCurso.setImage(curso1.getImage());
-        	newCurso.setProfesorId(curso1.getProfesorId());
-        	newCurso.setUsuarioId(1);
+        	newCurso.setEspecialidad(curso1.getEspecialidad());
         	System.out.println(newCurso);
-        	executed = cursoDao.agregarCurso(newCurso, userId);
+        	executed = profeDao.agregar(newCurso, userId);
         	data.setNombre(newCurso.getNombre());
         	break;
         }

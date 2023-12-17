@@ -1,10 +1,15 @@
 package cibertec.models;
 
+import java.util.List;
+
 public class Usuario {
 	private int id;
     private String nombre;
     private String email;
     private String password;
+    private Rol rol; // Relación con Rol
+    private List<Curso> cursos; // Lista de cursos creados por el usuario
+
     // getters y setters
     public int getId() {
 		return id;
@@ -29,5 +34,11 @@ public class Usuario {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public Rol getRol() {
+		return rol;
+	}
+	public void setRol(Rol rol) {
+		this.rol = rol;
 	}
 }

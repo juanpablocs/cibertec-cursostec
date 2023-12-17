@@ -44,8 +44,50 @@ public class Curso {
 	public Profesor getProfesor() {
 		return profesor;
 	}
+	
+	public void setProfesorId(int id) {
+		if (this.profesor == null) {
+	        this.profesor = new Profesor();
+	    }
+	    this.profesor.setId(id);
+	}
+	public int getProfesorId() {
+		if(this.profesor == null) {
+			return 0;
+		}
+		return profesor.getId();
+	}
 
+	public void setUsuarioId(int id) {
+		if (this.usuario == null) {
+	        this.usuario = new Usuario();
+	    }
+	    this.usuario.setId(id);
+	}
+	public int getUsuarioId() {
+		if(this.usuario == null) {
+			return 0;
+		}
+		return usuario.getId();
+	}
+	
 	public void setProfesor(Profesor profesor) {
 		this.profesor = profesor;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 }

@@ -1,10 +1,14 @@
 package cibertec.dao;
 
-public class UsuarioDao {
+import java.util.List;
 
-    public boolean validarUsuario(String username, String password) {
-        // En un caso real, aquí consultarías a una base de datos
-        // Por simplicidad, usamos valores estáticos
-        return "admin".equals(username) && "password".equals(password);
-    }
+import cibertec.models.Usuario;
+
+public interface UsuarioDao {
+
+    public Usuario validarUsuario(String username, String password);
+    public List<Usuario> getUsuarios();
+    public boolean agregar(Usuario user, String userId);
+	public boolean eliminar(int id, String userId);
+	public boolean actualizar(Usuario user, String userId);
 }
